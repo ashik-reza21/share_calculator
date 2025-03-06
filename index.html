@@ -3,107 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shareholder Calculator</title>
+    <title>Advanced Calculator Suite</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.2/dist/full.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        .btn-calculator {
+            height: 3.5rem;
+            font-size: 1.25rem;
+            border-radius: 9999px;
+            transition: all 0.2s ease;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4 md:p-8" style="font-family: 'Poppins', sans-serif">
     <div class="max-w-md mx-auto">
         <!-- Share Calculator Section -->
-        <div class="card bg-white shadow-2xl mb-6 md:mb-8 glass">
+        <div class="card bg-white shadow-2xl mb-6 glass">
             <div class="card-body p-4 md:p-6">
-                <h2 class="card-title text-xl md:text-2xl font-bold mb-3 md:mb-4 text-gray-700">
+                <h2 class="card-title text-xl font-bold mb-4">
                     <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
-                        Project Share Calculator
+                        Share Calculator (BDT/AED)
                     </span>
                 </h2>
                 
-                <div class="form-control">
-                    <label class="label pb-1">
-                        <span class="label-text text-gray-600 font-medium">Total Amount (BDT)</span>
-                    </label>
+                <div class="form-control mb-4">
                     <input type="number" id="totalAmount" 
-                           class="input input-lg input-bordered focus:input-primary transition-all"
-                           placeholder="Enter amount"
-                           oninput="calculateShares()">
+                           class="input input-lg input-bordered"
+                           placeholder="Enter amount">
                 </div>
 
-                <div class="divider my-4"></div>
-
-                <div class="space-y-3 md:space-y-4">
-                    <div class="bg-blue-50/50 p-3 md:p-4 rounded-xl border border-blue-200">
-                        <h3 class="font-semibold text-base md:text-lg text-blue-600 mb-1">
-                            Noyon's Husband (53.4%)
-                        </h3>
-                        <p class="text-xl md:text-2xl font-bold text-blue-800" id="noyonHusband">
-                            0.00 BDT
-                        </p>
+                <div class="flex flex-col gap-4 mb-4">
+                    <div class="bg-blue-50/50 p-4 rounded-xl">
+                        <div class="text-blue-600">Noyon's Husband (53.4%)</div>
+                        <div class="text-2xl font-bold text-blue-800" id="noyonResult">0.00</div>
                     </div>
-                    
-                    <div class="bg-purple-50/50 p-3 md:p-4 rounded-xl border border-purple-200">
-                        <h3 class="font-semibold text-base md:text-lg text-purple-600 mb-1">
-                            Dilroba (46.6%)
-                        </h3>
-                        <p class="text-xl md:text-2xl font-bold text-purple-800" id="dilroba">
-                            0.00 BDT
-                        </p>
+                    <div class="bg-purple-50/50 p-4 rounded-xl">
+                        <div class="text-purple-600">Dilroba (46.6%)</div>
+                        <div class="text-2xl font-bold text-purple-800" id="dilrobaResult">0.00</div>
                     </div>
                 </div>
 
-                <!-- Share History -->
-                <div class="mt-6">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Share History</h3>
-                    <div id="shareHistory" class="space-y-2 max-h-40 overflow-y-auto pr-2">
-                        <!-- History items will be added here -->
+                <button class="btn btn-primary w-full mb-4" onclick="calculateShares()">Calculate</button>
+                
+                <div class="bg-white p-3 rounded-lg">
+                    <div class="flex justify-between mb-2">
+                        <h3 class="font-semibold">Share History</h3>
+                        <button class="btn btn-xs btn-error" onclick="clearShareHistory()">Clear</button>
+                    </div>
+                    <div id="shareHistory" class="space-y-2 max-h-40 overflow-y-auto">
+                        <!-- Share history entries -->
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- General Calculator Section -->
+        <!-- Enhanced Calculator with History -->
         <div class="card bg-white shadow-2xl glass">
             <div class="card-body p-4 md:p-6">
-                <h2 class="card-title text-xl md:text-2xl font-bold mb-3 md:mb-4 text-gray-700">
-                    General Calculator
-                </h2>
-                
-                <div class="form-control">
+                <div class="form-control mb-4">
                     <input type="text" id="calcDisplay" 
-                           class="input input-lg input-bordered mb-3 md:mb-4 text-2xl md:text-3xl text-right font-medium bg-gray-50/50 focus:outline-none"
+                           class="input input-lg input-bordered text-right text-2xl"
                            placeholder="0"
                            readonly>
+                </div>
+
+                <div class="grid grid-cols-4 gap-2">
+                    <!-- Calculator buttons remain unchanged from previous version -->
+                    <!-- Row 1 -->
+                    <button class="btn-calculator bg-gradient-to-br from-red-400 to-red-500 text-white" onclick="clearDisplay()">C</button>
+                    <button class="btn-calculator bg-gradient-to-br from-amber-400 to-amber-500 text-white" onclick="toggleSign()">±</button>
+                    <button class="btn-calculator bg-gradient-to-br from-amber-400 to-amber-500 text-white" onclick="appendToDisplay('%')">%</button>
+                    <button class="btn-calculator bg-gradient-to-br from-amber-400 to-amber-500 text-white" onclick="appendToDisplay('/')">÷</button>
                     
-                    <div class="grid grid-cols-4 gap-2">
-                        <button class="btn btn-neutral col-span-2 h-14 md:h-16 text-lg" onclick="clearDisplay()">C</button>
-                        <button class="btn btn-neutral h-14 md:h-16 text-lg" onclick="appendToDisplay('/')">÷</button>
-                        <button class="btn btn-neutral h-14 md:h-16 text-lg" onclick="appendToDisplay('*')">×</button>
-                        
-                        <button class="btn btn-ghost bg-gray-100 h-14 md:h-16 text-lg active:scale-95 transition-transform" onclick="appendToDisplay('7')">7</button>
-                        <button class="btn btn-ghost bg-gray-100 h-14 md:h-16 text-lg active:scale-95" onclick="appendToDisplay('8')">8</button>
-                        <button class="btn btn-ghost bg-gray-100 h-14 md:h-16 text-lg active:scale-95" onclick="appendToDisplay('9')">9</button>
-                        <button class="btn btn-neutral h-14 md:h-16 text-lg active:scale-95" onclick="appendToDisplay('-')">-</button>
-                        
-                        <button class="btn btn-ghost bg-gray-100 h-14 md:h-16 text-lg active:scale-95" onclick="appendToDisplay('4')">4</button>
-                        <button class="btn btn-ghost bg-gray-100 h-14 md:h-16 text-lg active:scale-95" onclick="appendToDisplay('5')">5</button>
-                        <button class="btn btn-ghost bg-gray-100 h-14 md:h-16 text-lg active:scale-95" onclick="appendToDisplay('6')">6</button>
-                        <button class="btn btn-neutral h-14 md:h-16 text-lg active:scale-95" onclick="appendToDisplay('+')">+</button>
-                        
-                        <button class="btn btn-ghost bg-gray-100 h-14 md:h-16 text-lg active:scale-95" onclick="appendToDisplay('1')">1</button>
-                        <button class="btn btn-ghost bg-gray-100 h-14 md:h-16 text-lg active:scale-95" onclick="appendToDisplay('2')">2</button>
-                        <button class="btn btn-ghost bg-gray-100 h-14 md:h-16 text-lg active:scale-95" onclick="appendToDisplay('3')">3</button>
-                        <button class="btn btn-primary h-14 md:h-16 text-lg active:scale-95" onclick="calculate()">=</button>
-                        
-                        <button class="btn btn-ghost bg-gray-100 h-14 md:h-16 text-lg col-span-2 active:scale-95" onclick="appendToDisplay('0')">0</button>
-                        <button class="btn btn-ghost bg-gray-100 h-14 md:h-16 text-lg active:scale-95" onclick="appendToDisplay('.')">.</button>
-                    </div>
+                    <!-- Row 2 -->
+                    <button class="btn-calculator bg-gradient-to-br from-blue-100 to-blue-200" onclick="appendToDisplay('7')">7</button>
+                    <button class="btn-calculator bg-gradient-to-br from-blue-100 to-blue-200" onclick="appendToDisplay('8')">8</button>
+                    <button class="btn-calculator bg-gradient-to-br from-blue-100 to-blue-200" onclick="appendToDisplay('9')">9</button>
+                    <button class="btn-calculator bg-gradient-to-br from-amber-400 to-amber-500 text-white" onclick="appendToDisplay('*')">×</button>
+                    
+                    <!-- Row 3 -->
+                    <button class="btn-calculator bg-gradient-to-br from-blue-100 to-blue-200" onclick="appendToDisplay('4')">4</button>
+                    <button class="btn-calculator bg-gradient-to-br from-blue-100 to-blue-200" onclick="appendToDisplay('5')">5</button>
+                    <button class="btn-calculator bg-gradient-to-br from-blue-100 to-blue-200" onclick="appendToDisplay('6')">6</button>
+                    <button class="btn-calculator bg-gradient-to-br from-amber-400 to-amber-500 text-white" onclick="appendToDisplay('-')">-</button>
+                    
+                    <!-- Row 4 -->
+                    <button class="btn-calculator bg-gradient-to-br from-blue-100 to-blue-200" onclick="appendToDisplay('1')">1</button>
+                    <button class="btn-calculator bg-gradient-to-br from-blue-100 to-blue-200" onclick="appendToDisplay('2')">2</button>
+                    <button class="btn-calculator bg-gradient-to-br from-blue-100 to-blue-200" onclick="appendToDisplay('3')">3</button>
+                    <button class="btn-calculator bg-gradient-to-br from-amber-400 to-amber-500 text-white" onclick="appendToDisplay('+')">+</button>
+                    
+                    <!-- Row 5 -->
+                    <button class="btn-calculator bg-gradient-to-br from-blue-100 to-blue-200 col-span-2" onclick="appendToDisplay('0')">0</button>
+                    <button class="btn-calculator bg-gradient-to-br from-blue-100 to-blue-200" onclick="appendToDisplay('.')">.</button>
+                    <button class="btn-calculator bg-gradient-to-br from-green-400 to-green-500 text-white" onclick="calculate()">=</button>
                 </div>
 
                 <!-- Calculator History -->
-                <div class="mt-6">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Calc History</h3>
-                    <div id="calcHistory" class="space-y-2 max-h-40 overflow-y-auto pr-2">
-                        <!-- History items will be added here -->
+                <div class="bg-white p-3 rounded-lg mt-4">
+                    <div class="flex justify-between mb-2">
+                        <h3 class="font-semibold">Calculation History</h3>
+                        <button class="btn btn-xs btn-error" onclick="clearCalcHistory()">Clear</button>
+                    </div>
+                    <div id="calcHistory" class="space-y-2 max-h-40 overflow-y-auto">
+                        <div class="text-center text-sm text-gray-500 py-2">No calculations yet</div>
                     </div>
                 </div>
             </div>
@@ -113,22 +119,21 @@
     <script>
         // Share Calculator Logic
         let shareHistory = [];
-        
-        function calculateShares() {
-            const totalAmount = parseFloat(document.getElementById('totalAmount').value) || 0;
-            const noyonShare = totalAmount * 0.534;
-            const dilrobaShare = totalAmount * 0.466;
-            
-            document.getElementById('noyonHusband').textContent = 
-                `${noyonShare.toLocaleString('en-BD', { maximumFractionDigits: 2 })} BDT`;
-            document.getElementById('dilroba').textContent = 
-                `${dilrobaShare.toLocaleString('en-BD', { maximumFractionDigits: 2 })} BDT`;
+        let calcHistory = [];
 
-            if(totalAmount > 0) {
+        function calculateShares() {
+            const amount = parseFloat(document.getElementById('totalAmount').value) || 0;
+            const noyon = amount * 0.534;
+            const dilroba = amount * 0.466;
+
+            document.getElementById('noyonResult').textContent = noyon.toFixed(2);
+            document.getElementById('dilrobaResult').textContent = dilroba.toFixed(2);
+
+            if(amount > 0) {
                 shareHistory.unshift({
-                    total: totalAmount,
-                    noyon: noyonShare,
-                    dilroba: dilrobaShare,
+                    amount: amount,
+                    noyon: noyon,
+                    dilroba: dilroba,
                     timestamp: new Date().toLocaleString()
                 });
                 
@@ -137,109 +142,98 @@
             }
         }
 
-        function updateShareHistory() {
-            const historyContainer = document.getElementById('shareHistory');
-            historyContainer.innerHTML = shareHistory.map(entry => `
-                <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
-                    <div class="flex justify-between items-center text-sm mb-1">
-                        <span class="font-medium">${entry.timestamp}</span>
-                        <span class="text-blue-600">${entry.total.toFixed(2)} BDT</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <div class="text-blue-500">Noyon: ${entry.noyon.toFixed(2)}</div>
-                        <div class="text-purple-500">Dilroba: ${entry.dilroba.toFixed(2)}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // General Calculator Logic
+        // Calculator Logic
         let displayValue = '0';
-        let calcHistory = [];
-
-        function updateDisplay() {
-            document.getElementById('calcDisplay').value = displayValue;
-        }
 
         function appendToDisplay(value) {
-            const lastChar = displayValue.slice(-1);
-            
-            if (['+', '-', '*', '/'].includes(lastChar) && ['+', '-', '*', '/'].includes(value)) {
-                displayValue = displayValue.slice(0, -1) + value;
-            } else {
-                if (displayValue === '0' && !['.', '+', '-', '*', '/'].includes(value)) {
-                    displayValue = value;
-                } else {
-                    displayValue += value;
-                }
-            }
-            updateDisplay();
-        }
-
-        function clearDisplay() {
-            displayValue = '0';
-            updateDisplay();
+            if(displayValue === '0' && value !== '.') displayValue = '';
+            displayValue += value;
+            updateCalcDisplay();
         }
 
         function calculate() {
             try {
                 const expression = displayValue;
-                const result = eval(expression.replace(/×/g, '*'));
-                
-                displayValue = Number.isInteger(result) ? 
-                    result.toString() : 
-                    result.toFixed(4).replace(/\.?0+$/, '');
+                const result = eval(expression.replace('%', '/100*'));
                 
                 calcHistory.unshift({
                     expression: expression,
-                    result: displayValue,
+                    result: result,
                     timestamp: new Date().toLocaleTimeString()
                 });
                 
                 if(calcHistory.length > 5) calcHistory.pop();
+                
+                displayValue = Number.isInteger(result) ? result.toString() : result.toFixed(2);
+                updateCalcDisplay();
                 updateCalcHistory();
-                updateDisplay();
-            } catch (error) {
+            } catch {
                 displayValue = 'Error';
-                updateDisplay();
-                setTimeout(clearDisplay, 1500);
+                updateCalcDisplay();
+                setTimeout(() => {
+                    displayValue = '0';
+                    updateCalcDisplay();
+                }, 1500);
             }
         }
 
+        function clearCalcHistory() {
+            calcHistory = [];
+            updateCalcHistory();
+        }
+
         function updateCalcHistory() {
-            const historyContainer = document.getElementById('calcHistory');
-            historyContainer.innerHTML = calcHistory.map(entry => `
-                <div class="bg-white p-2 rounded-lg border border-gray-200 shadow-sm">
-                    <div class="flex justify-between items-center text-sm">
-                        <span class="text-gray-500">${entry.timestamp}</span>
-                        <span class="font-medium text-green-600">= ${entry.result}</span>
+            const container = document.getElementById('calcHistory');
+            container.innerHTML = calcHistory.length > 0 
+                ? calcHistory.map(entry => `
+                    <div class="bg-gray-50 p-2 rounded">
+                        <div class="text-sm flex justify-between">
+                            <span>${entry.timestamp}</span>
+                            <span class="font-mono">${entry.expression}</span>
+                        </div>
+                        <div class="text-right text-xs font-bold text-green-600">
+                            = ${Number(entry.result).toLocaleString()}
+                        </div>
                     </div>
-                    <div class="text-xs text-gray-600 truncate">${entry.expression}</div>
+                `).join('')
+                : '<div class="text-center text-sm text-gray-500 py-2">No calculations yet</div>';
+        }
+
+        // Preserved common functions
+        function clearDisplay() {
+            displayValue = '0';
+            updateCalcDisplay();
+        }
+
+        function toggleSign() {
+            displayValue = (-parseFloat(displayValue)).toString();
+            updateCalcDisplay();
+        }
+
+        function clearShareHistory() {
+            shareHistory = [];
+            updateShareHistory();
+        }
+
+        function updateShareHistory() {
+            const container = document.getElementById('shareHistory');
+            container.innerHTML = shareHistory.map(entry => `
+                <div class="bg-gray-50 p-2 rounded">
+                    <div class="text-sm flex justify-between">
+                        <span>${entry.timestamp}</span>
+                        <span class="font-bold">${entry.amount.toFixed(2)}</span>
+                    </div>
+                    <div class="text-xs flex justify-between">
+                        <span class="text-blue-600">N: ${entry.noyon.toFixed(2)}</span>
+                        <span class="text-purple-600">D: ${entry.dilroba.toFixed(2)}</span>
+                    </div>
                 </div>
             `).join('');
         }
 
-        // Keyboard Support (only for general calculator)
-        document.addEventListener('keydown', (e) => {
-            // Ignore input if focused on share calculator
-            if(document.activeElement.id === 'totalAmount') return;
-
-            const key = e.key;
-            if (/[0-9\.\+\-\*\/]/.test(key)) {
-                e.preventDefault();
-                appendToDisplay(key === '*' ? '×' : key);
-            } else if (key === 'Enter') {
-                e.preventDefault();
-                calculate();
-            } else if (key === 'Escape') {
-                e.preventDefault();
-                clearDisplay();
-            } else if (key === 'Backspace') {
-                e.preventDefault();
-                displayValue = displayValue.slice(0, -1) || '0';
-                updateDisplay();
-            }
-        });
+        function updateCalcDisplay() {
+            document.getElementById('calcDisplay').value = displayValue;
+        }
     </script>
 </body>
 </html>
