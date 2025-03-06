@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Share Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.2/dist/full.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        .btn-calculator {
+            transition: all 0.1s ease;
+            height: 3.5rem;
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4 md:p-8" style="font-family: 'Poppins', sans-serif">
+    <div class="max-w-md mx-auto">
+        <!-- Share Calculator Section -->
+        <div class="card bg-white shadow-2xl mb-6 glass">
+            <div class="card-body p-4 md:p-6">
+                <h2 class="card-title text-xl font-bold mb-4">
+                    <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
+                        Share Calculator (BDT/AED)
+                    </span>
+                </h2>
+                
+                <div class="form-control mb-4">
+                    <input type="number" id="totalAmount" 
+                           class="input input-lg input-bordered"
+                           placeholder="Enter amount">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="bg-blue-50/50 p-4 rounded-xl">
+                        <div class="text-blue-600">Noyon (53.4%)</div>
+                        <div class="text-2xl font-bold text-blue-800" id="noyonResult">0.00</div>
+                    </div>
+                    <div class="bg-purple-50/50 p-4 rounded-xl">
+                        <div class="text-purple-600">Dilroba (46.6%)</div>
+                        <div class="text-2xl font-bold text-purple-800" id="dilrobaResult">0.00</div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary w-full mb-4" onclick="calculateShares()">Calculate</button>
+                
+                <div class="bg-white p-3 rounded-lg">
+                    <div class="flex justify-between mb-2">
+                        <h3 class="font-semibold">History</h3>
+                        <button class="btn btn-xs btn-error" onclick="clearShareHistory()">Clear</button>
+                    </div>
+                    <div id="shareHistory" class="space-y-2 max-h-40 overflow-y-auto">
+                        <!-- History entries -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Simple Calculator -->
+        <div class="card bg-white shadow-2xl glass">
+            <div class="card-body p-4 md:p-6">
+                <div class="form-control mb-4">
+                    <input type="text" id="calcDisplay" 
+                           class="input input-lg input-bordered text-right text-2xl"
+                           placeholder="0"
+                           readonly>
+                </div>
+
+                <div class="grid grid-cols-4 gap-2">
+                    <button class="btn btn-error btn-calculator col-span-2" onclick="clearDisplay()">C</button>
+                    <button class="btn btn-warning btn-calculator" onclick="toggleSign()">±</button>
+                    <button class="btn btn-warning btn-calculator" onclick="appendToDisplay('%')">%</button>
+                    
+                    <button class="btn btn-neutral btn-calculator" onclick="appendToDisplay('7')">7</button>
+                    <button class="btn btn-neutral btn-calculator" onclick="appendToDisplay('8')">8</button>
+                    <button class="btn btn-neutral btn-calculator" onclick="appendToDisplay('9')">9</button>
+                    <button class="btn btn-warning btn-calculator" onclick="appendToDisplay('/')">÷</button>
+                    
+                    <button class="btn btn-neutral btn-calculator" onclick="appendToDisplay('4')">4</button>
+                    <button class="btn btn-neutral btn-calculator" onclick="appendToDisplay('5')">5</button>
+                    <button class="btn btn-neutral btn-calculator" onclick="appendToDisplay('6')">6</button>
+                    <button class="btn btn-warning btn-calculator" onclick="appendToDisplay('*')">×</button>
+                    
+                    <button class="btn btn-neutral btn-calculator" onclick="appendToDisplay('1')">1</button>
+                    <button class="btn btn-neutral btn-calculator" onclick="appendToDisplay('2')">2</button>
+                    <button class="btn btn-neutral btn-calculator" onclick="appendToDisplay('3')">3</button>
+                    <button class="btn btn-warning btn-calculator" onclick="appendToDisplay('-')">-</button>
+                    
+                    <button class="btn btn-neutral btn-calculator col-span-2" onclick="appendToDisplay('0')">0</button>
+                    <button class="btn btn-neutral btn-calculator" onclick="appendToDisplay('.')">.</button>
+                    <button class="btn btn-warning btn-calculator" onclick="appendToDisplay('+')">+</button>
+                    <button class="btn btn-primary btn-calculator" onclick="calculate()">=</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Share Calculator Logic
+        let shareHistory = [];
+
+        function calculateShares() {
+            const amount = parseFloat(document.getElementById('totalAmount').value) || 0;
+            const noyon = amount * 0.534;
+            const dilroba = amount * 0.466;
+
+            document.getElementById('noyonResult').textContent = noyon.toFixed(2);
+            document.getElementById('dilrobaResult').textContent = dilroba.toFixed(2);
+
+            if(amount > 0) {
+                shareHistory.unshift({
+                    amount: amount,
+                    noyon: noyon,
+                    dilroba: dilroba,
+                    timestamp: new Date().toLocaleString()
+                });
+                
+                if(shareHistory.length > 5) shareHistory.pop();
+                updateShareHistory();
+            }
+        }
+
+        // Calculator Logic
+        let displayValue = '0';
+
+        function appendToDisplay(value) {
+            if(displayValue === '0' && value !== '.') displayValue = '';
+            displayValue += value;
+            updateCalcDisplay();
+        }
+
+        function toggleSign() {
+            displayValue = (-parseFloat(displayValue)).toString();
+            updateCalcDisplay();
+        }
+
+        function calculate() {
+            try {
+                let expression = displayValue.replace('%', '/100*');
+                const result = eval(expression);
+                displayValue = Number.isInteger(result) ? result.toString() : result.toFixed(2);
+                updateCalcDisplay();
+            } catch {
+                displayValue = 'Error';
+                updateCalcDisplay();
+                setTimeout(() => {
+                    displayValue = '0';
+                    updateCalcDisplay();
+                }, 1500);
+            }
+        }
+
+        // Common Functions
+        function clearDisplay() {
+            displayValue = '0';
+            updateCalcDisplay();
+        }
+
+        function clearShareHistory() {
+            shareHistory = [];
+            updateShareHistory();
+        }
+
+        function updateShareHistory() {
+            const container = document.getElementById('shareHistory');
+            container.innerHTML = shareHistory.map(entry => `
+                <div class="bg-gray-50 p-2 rounded">
+                    <div class="text-sm flex justify-between">
+                        <span>${entry.timestamp}</span>
+                        <span class="font-bold">${entry.amount.toFixed(2)}</span>
+                    </div>
+                    <div class="text-xs flex justify-between">
+                        <span class="text-blue-600">N: ${entry.noyon.toFixed(2)}</span>
+                        <span class="text-purple-600">D: ${entry.dilroba.toFixed(2)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateCalcDisplay() {
+            document.getElementById('calcDisplay').value = displayValue;
+        }
+    </script>
+</body>
+</html>
